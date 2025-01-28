@@ -1,7 +1,7 @@
 // Instalaciones necesarias:
 // npm install react react-dom tailwindcss @headlessui/react
 
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './App.css'; // Tailwind ya configurado
 
 type Spawn = {
@@ -74,10 +74,10 @@ function App() {
     return str.replace(regex, '').replace(/\\s+/g, ' ').trim();
   };
 
-  const RARITY = {
-    'common': 1,
-    'uncommon': 2,
-    'rare': 3,
+  const RARITY: Record<string, number> = {
+    common: 1,
+    uncommon: 2,
+    rare: 3,
     'ultra-rare': 4,
   };
 
@@ -126,10 +126,11 @@ function App() {
           // Calcular la ubicación más fácil (prioridad más baja)
           if (baseEntity.spawns) {
             baseEntity.rarity = baseEntity.spawns.reduce((easiest, spawn) => {
-              return RARITY[spawn.bucket] < RARITY[easiest]
-                ? spawn.bucket
+              const bucket = spawn.bucket as keyof typeof RARITY; // Asegúrate de que sea una clave válida
+              return RARITY[bucket] < RARITY[easiest as keyof typeof RARITY]
+                ? bucket
                 : easiest;
-            }, 'ultra-rare');
+            }, 'ultra-rare' as keyof typeof RARITY); // Tipo inicial
           }
 
           const forms = entry.forms?.map((form: any) => ({
@@ -175,8 +176,15 @@ function App() {
         );
       })
       .sort((a, b) => {
-        if (a[sortKey] < b[sortKey]) return isAscending ? -1 : 1;
-        if (a[sortKey] > b[sortKey]) return isAscending ? 1 : -1;
+        const aValue = a[sortKey];
+        const bValue = b[sortKey];
+  
+        if (aValue === undefined || bValue === undefined) {
+          return 0; // Si alguna clave es undefined, no se cambia el orden
+        }
+  
+        if (aValue < bValue) return isAscending ? -1 : 1;
+        if (aValue > bValue) return isAscending ? 1 : -1;
         return 0;
       });
   }, [atmdbData, search, sortKey, isAscending]);
