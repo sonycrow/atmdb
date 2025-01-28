@@ -23,6 +23,8 @@ def merge_json_repositories(original_repo, expansion_repo, output_file):
                 try:
                     data = json.load(json_file)
                     data["source"] = "cobblemon"
+                    data["drops"] = ""
+                    data["moves"] = ""
                     combined_data[file] = data
                 except json.JSONDecodeError:
                     print(f"Error al decodificar el archivo JSON: {file_path}")
@@ -34,6 +36,8 @@ def merge_json_repositories(original_repo, expansion_repo, output_file):
                 try:
                     data = json.load(json_file)
                     data["source"] = "AllTheMons"
+                    data["drops"] = ""
+                    data["moves"] = ""
                     combined_data[file] = data
                 except json.JSONDecodeError:
                     print(f"Error al decodificar el archivo JSON: {file_path}")
