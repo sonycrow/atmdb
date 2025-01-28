@@ -84,7 +84,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/data/_index.json');
+        const response = await fetch('./data/_index.json');
         if (!response.ok) {
           throw new Error(`Failed to fetch entities.json: ${response.statusText}`);
         }
