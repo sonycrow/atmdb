@@ -23,8 +23,18 @@ def merge_json_repositories(original_repo, expansion_repo, output_file):
                 try:
                     data = json.load(json_file)
                     data["source"] = "cobblemon"
-                    data["drops"] = ""
-                    data["moves"] = ""
+                    data.pop('drops', None)
+                    data.pop('moves', None)
+                    data.pop('behaviour', None)
+                    data.pop('hitbox', None)
+                    data.pop('evYield', None)
+
+                    # Recorrer la lista de "forms" si existe y eliminar una clave
+                    if "forms" in data and isinstance(data["forms"], list):
+                        for form in data["forms"]:
+                            form.pop("moves", None)  # Reemplaza "unwanted_key" con la clave que deseas eliminar
+                            form.pop("evYield", None)  # Reemplaza "unwanted_key" con la clave que deseas eliminar
+
                     combined_data[file] = data
                 except json.JSONDecodeError:
                     print(f"Error al decodificar el archivo JSON: {file_path}")
@@ -36,8 +46,18 @@ def merge_json_repositories(original_repo, expansion_repo, output_file):
                 try:
                     data = json.load(json_file)
                     data["source"] = "AllTheMons"
-                    data["drops"] = ""
-                    data["moves"] = ""
+                    data.pop('drops', None)
+                    data.pop('moves', None)
+                    data.pop('behaviour', None)
+                    data.pop('hitbox', None)
+                    data.pop('evYield', None)
+
+                    # Recorrer la lista de "forms" si existe y eliminar una clave
+                    if "forms" in data and isinstance(data["forms"], list):
+                        for form in data["forms"]:
+                            form.pop("moves", None)  # Reemplaza "unwanted_key" con la clave que deseas eliminar
+                            form.pop("evYield", None)  # Reemplaza "unwanted_key" con la clave que deseas eliminar
+
                     combined_data[file] = data
                 except json.JSONDecodeError:
                     print(f"Error al decodificar el archivo JSON: {file_path}")
@@ -111,7 +131,7 @@ def merge_additional_repositories(original_file, spawn_repo_original, spawn_repo
 # Variables de configuración
 original_repo = "./public/data/dex/cobblemon"
 expansion_repo = "./public/data/dex/atm"
-output_json_file = "./public/data/_index.json"
+output_json_file = "./public/data/codex.json"
 
 spawn_repo_original = "./public/data/spawn/cobblemon"
 spawn_repo_expansion = "./public/data/spawn/atm"
