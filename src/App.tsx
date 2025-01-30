@@ -202,7 +202,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 p-5">
       <h1 className="text-2xl font-bold text-center mb-5">ATMDB List</h1>
 
-      <input type="text" placeholder="Buscar..." className="border p-2 rounded w-full mb-5" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <input type="text" placeholder="Search..." className="border p-2 rounded w-full mb-5" value={search} onChange={(e) => setSearch(e.target.value)} />
 
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
@@ -212,11 +212,11 @@ function App() {
             <th className="cursor-pointer border border-gray-300 px-4 py-2" onClick={() => handleSort('implemented')}>InGame</th>
             <th className="border border-gray-300 px-4 py-2">Types</th>
             <th className="border border-gray-300 px-4 py-2">Source</th>
-            <th className="border border-gray-300 px-4 py-2">Pre-evolución</th>
-            <th className="border border-gray-300 px-4 py-2">Evoluciones</th>
-            <th className="border border-gray-300 px-4 py-2">Etiquetas</th>
-            <th className="border border-gray-300 px-4 py-2">Captura</th>
-            <th className="border border-gray-300 px-4 py-2">Género(♂)</th>
+            <th className="border border-gray-300 px-4 py-2">Pre-evolution</th>
+            <th className="border border-gray-300 px-4 py-2">Evolutions</th>
+            <th className="border border-gray-300 px-4 py-2">Tags</th>
+            <th className="border border-gray-300 px-4 py-2">Capture</th>
+            <th className="border border-gray-300 px-4 py-2">Gender(♂)</th>
             <th className="border border-gray-300 px-4 py-2">Rarity</th>
             <th className="border border-gray-300 px-4 py-2">Spawns</th>
           </tr>
@@ -275,76 +275,85 @@ function App() {
       {selectedEntity && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center" onClick={() => setSelectedEntity(null)}>
           <div className="bg-white p-5 rounded shadow-lg w-1/2">
-            <h2 className="text-xl font-bold mb-1">{selectedEntity.name}</h2>
-            {selectedEntity.form && <p className="text-sm text-gray-500 mb-1">Forma: {selectedEntity.form}</p>}
-            <p><strong>Número:</strong> {selectedEntity.nationalPokedexNumber}</p>
-            <p><strong>Tipo: </strong>
-              {selectedEntity.type.map((type, index) => (
-                <span
-                key={index}
-                className={`px-3 py-1 rounded-xl text-gray-50 mr-1 ${
-                  type === 'fire'     ? 'bg-red-500    border-red-700' :
-                  type === 'water'    ? 'bg-blue-500   border-blue-700' :
-                  type === 'grass'    ? 'bg-green-600  border-green-800' :
-                  type === 'dragon'   ? 'bg-violet-500 border-violet-700' :
-                  type === 'flying'   ? 'bg-indigo-500 border-indigo-500' :
-                  type === 'poison'   ? 'bg-violet-800 border-violet-950' :
-                  type === 'bug'      ? 'bg-green-400  border-green-600' :
-                  type === 'dark'     ? 'bg-gray-700   border-gray-900' :
-                  type === 'electric' ? 'bg-yellow-300 border-yellow-500' :
-                  type === 'ice'      ? 'bg-blue-400   border-blue-600' :
-                  type === 'steel'    ? 'bg-gray-300   border-gray-500' :
-                  type === 'ground'   ? 'bg-amber-600  border-amber-800' :
-                  type === 'fairy'    ? 'bg-pink-300   border-indigo-500' :
-                  type === 'rock'     ? 'bg-amber-800  border-amber-950' :
-                  type === 'psychic'  ? 'bg-pink-500   border-pink-700' :
-                  type === 'fighting' ? 'bg-red-700    border-red-900' :
-                  type === 'ghost'    ? 'bg-indigo-700 border-indigo-900' :
-                  'bg-gray-500 border-gray-700'
-                }`}
-              >
-              {capitalizeWords(type)}
-              </span>
-              ))}
-            </p>
-            <p><strong>Source:</strong> {selectedEntity.source}</p>
-            <div className="mt-1">
-              <h3 className="font-bold">Estadísticas:</h3>
-              <ul>
-                {Object.entries(selectedEntity.baseStats).map(([key, value]) => (
-                  <li key={key} className="capitalize">
-                    {key}: {value}
-                  </li>
-                ))}
-              </ul>
+            <div className='mb-4'>
+              <h2 className="text-xl font-bold mb-1">{selectedEntity.name}</h2>
+              {selectedEntity.form && <p className="text-sm text-gray-500 mb-1">Forma: {selectedEntity.form}</p>}
             </div>
-            <p className="mt-1"><strong>Habilidades:</strong> {selectedEntity.abilities.join(', ')}</p>
-            <p className="mt-1"><strong>Etiquetas:</strong> {selectedEntity.labels?.join(', ') || 'N/A'}</p>
-            <p className="mt-1"><strong>Aspecto:</strong> {selectedEntity.aspects ? selectedEntity.aspects[0] : 'N/A'}</p>
-            <p className="mt-1"><strong>Ratio de Captura:</strong> {selectedEntity.catchRate}</p>
-            <p className="mt-1"><strong>Ratio de Género:</strong> {selectedEntity.maleRatio !== undefined ? `${selectedEntity.maleRatio * 100}%` : 'N/A'}</p>
-            <p className="mt-1"><strong>Pre-evolución:</strong> {selectedEntity.preEvolution || 'N/A'}</p>
-            <p className="mt-1 h-12 overflow-auto"><strong>Evoluciones:</strong> {selectedEntity.evolutions?.join(', ') || 'N/A'}</p>
-            {selectedEntity.spawns && (
-              <div className="mt-1">
-                <h3 className="font-bold">Spawns:</h3>
-                <ul className="h-28 overflow-auto">
-                  {selectedEntity.spawns.map((spawn, index) => (
-                    <li key={index} className="mb-2">
-                      <strong>Pokemon:</strong> {spawn.name}<br />
-                      <strong>Nivel:</strong> {spawn.level}<br />
-                      <strong>Peso:</strong> {spawn.weight}<br />
-                      <strong>Bucket:</strong> {spawn.bucket}<br />
-                      <strong>Context:</strong> {spawn.context}<br />
-                      <strong>Conditions:</strong> {spawn.conditions}<br />
-                      <strong>Anticonditions:</strong> {spawn.anticonditions}<br />
-                      <strong>Biomes:</strong> {spawn.biomes.join(', ')}<br />
-                    </li>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <p><strong>Implemented:</strong> {selectedEntity.implemented ? 'Yes' : 'No'}</p>
+                <p><strong>Number:</strong> {selectedEntity.nationalPokedexNumber}</p>
+                <p><strong>Types: </strong>
+                  {selectedEntity.type.map((type, index) => (
+                    <span
+                      key={index}
+                      className={`px-3 py-1 rounded-xl text-gray-50 mr-1 ${
+                        type === 'fire' ? 'bg-red-500    border-red-700' :
+                        type === 'water' ? 'bg-blue-500   border-blue-700' :
+                        type === 'grass' ? 'bg-green-600  border-green-800' :
+                        type === 'dragon' ? 'bg-violet-500 border-violet-700' :
+                        type === 'flying' ? 'bg-indigo-500 border-indigo-500' :
+                        type === 'poison' ? 'bg-violet-800 border-violet-950' :
+                        type === 'bug' ? 'bg-green-400  border-green-600' :
+                        type === 'dark' ? 'bg-gray-700   border-gray-900' :
+                        type === 'electric' ? 'bg-yellow-300 border-yellow-500' :
+                        type === 'ice' ? 'bg-blue-400   border-blue-600' :
+                        type === 'steel' ? 'bg-gray-300   border-gray-500' :
+                        type === 'ground' ? 'bg-amber-600  border-amber-800' :
+                        type === 'fairy' ? 'bg-pink-300   border-indigo-500' :
+                        type === 'rock' ? 'bg-amber-800  border-amber-950' :
+                        type === 'psychic' ? 'bg-pink-500   border-pink-700' :
+                        type === 'fighting' ? 'bg-red-700    border-red-900' :
+                        type === 'ghost' ? 'bg-indigo-700 border-indigo-900' :
+                        'bg-gray-500 border-gray-700'
+                        }`}
+                    >
+                      {capitalizeWords(type)}
+                    </span>
                   ))}
-                </ul>
+                </p>
+                <p><strong>Source:</strong> {selectedEntity.source}</p>
+                <div className="mt-1">
+                  <h3 className="font-bold">Base Stats:</h3>
+                  <ul className="pl-4">
+                    {Object.entries(selectedEntity.baseStats).map(([key, value]) => (
+                      <li key={key} className="capitalize">
+                        <strong>{key}:</strong> {value}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="mt-1"><strong>Skills:</strong> {selectedEntity.abilities.join(', ')}</p>
+                <p className="mt-1"><strong>Tags:</strong> {selectedEntity.labels?.join(', ') || 'N/A'}</p>
+                <p className="mt-1"><strong>Capture:</strong> {selectedEntity.catchRate}</p>
+                <p className="mt-1"><strong>Gender:</strong> {selectedEntity.maleRatio !== undefined ? `${selectedEntity.maleRatio * 100}%` : 'N/A'}</p>
+                <p className="mt-1"><strong>Pre-evolution:</strong> {selectedEntity.preEvolution || 'N/A'}</p>
+                <p className="mt-1 h-16 overflow-auto"><strong>Evolutions:</strong> {selectedEntity.evolutions?.join(', ') || 'N/A'}</p>
               </div>
-            )}
+              <div>
+                {selectedEntity.spawns && (
+                  <div>
+                    <h3 className="font-bold">Spawns:</h3>
+                    <ul className="h-96 overflow-auto pl-4">
+                      {selectedEntity.spawns.length <= 0 && <li>N/A</li>}
+                      {selectedEntity.spawns.map((spawn, index) => (
+                        <li key={index} className="mb-2">
+                          <span className=" border-b-4"><strong>Pokemon:</strong> {spawn.name}</span><br />
+                          <strong>Levels:</strong> {spawn.level}<br />
+                          <strong>Weight:</strong> {spawn.weight}<br />
+                          <strong>Bucket:</strong> {spawn.bucket}<br />
+                          <strong>Context:</strong> {spawn.context}<br />
+                          <strong>Conditions:</strong> {spawn.conditions}<br />
+                          <strong>Anticonditions:</strong> {spawn.anticonditions}<br />
+                          <strong>Biomes:</strong> {spawn.biomes.join(', ')}<br />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
+              </div>
+            </div>
             <button className="mt-5 bg-red-500 text-white py-2 px-4 rounded" onClick={() => setSelectedEntity(null)}>Cerrar</button>
           </div>
         </div>
